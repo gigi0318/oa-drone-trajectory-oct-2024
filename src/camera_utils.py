@@ -61,8 +61,8 @@ def compute_image_footprint_on_surface(camera: Camera, distance_from_surface: fl
     # Reproject corners to world coordinates
     world_coords = []
     for u, v in corners:
-        X = (u - camera.cx) * Z / camera.fx
-        Y = (v - camera.cy) * Z / camera.fy
+        X = (u - camera.cx) * distance_from_surface / camera.fx
+        Y = (v - camera.cy) * distance_from_surface / camera.fy
         world_coords.append((X, Y))
     # Convert to numpy array for easier manipulation
     world_coords = np.array(world_coords)
@@ -87,7 +87,7 @@ def compute_ground_sampling_distance(camera: Camera, distance_from_surface: floa
     """
     
     # Compute the footprint dimensions at distance Z
-    footprint = compute_image_footprint_on_surface(camera, Z)
+    footprint = compute_image_footprint_on_surface(camera, distance_from_surface)
     
     # Calculate GSD
     gsd_x = footprint[0] / camera.image_size_x  # width GSD
@@ -95,6 +95,8 @@ def compute_ground_sampling_distance(camera: Camera, distance_from_surface: floa
     
     # You can choose to return either or average
     return (gsd_x + gsd_y) / 2
+~1
+
 
 def reproject_image_point_to_world(camera: Camera, pixel: np.ndarray, Z: float) -> np.ndarray:
     """
@@ -117,3 +119,4 @@ def reproject_image_point_to_world(camera: Camera, pixel: np.ndarray, Z: float) 
     X = (u - camera.cx) * Z / camera.fx
     Y = (v - camera.cy) * Z / camera.fy
     return np.array([X, Y, Z], dtype=np.float32)
+

@@ -30,7 +30,12 @@ class DatasetSpec:
     """
     Data model for specifications of an image dataset.
     """
-    pass
+    overlap: float  # Ratio of scene shared between two consecutive images (0 to 1)
+    sidelap: float  # Ratio of scene shared between two images in adjacent rows (0 to 1)
+    height: float   # Height of the scan above the ground (in meters)
+    scan_dimension_x: float  # Horizontal size of the rectangle to be scanned (in meters)
+    scan_dimension_y: float  # Vertical size of the rectangle to be scanned (in meters)
+    exposure_time_ms: int    # Exposure time for each image (in milliseconds)
 
 
 @dataclass

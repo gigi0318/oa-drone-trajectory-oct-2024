@@ -36,6 +36,9 @@ class DatasetSpec:
     scan_dimension_x: float  # Horizontal size of the rectangle to be scanned (in meters)
     scan_dimension_y: float  # Vertical size of the rectangle to be scanned (in meters)
     exposure_time_ms: int    # Exposure time for each image (in milliseconds)
+    def __repr__(self):
+        return (f"DatasetSpec(overlap={self.overlap}, sidelap={self.sidelap}, height={self.height}, scan_dimension_x={self.scan_dimension_x},scan_dimension_y={self.scan_dimension_y},exposure_time_ms={self.exposure_time_ms} ")
+
 
 
 @dataclass

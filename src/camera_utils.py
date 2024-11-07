@@ -1,7 +1,7 @@
 """Utility functions for the camera model.
 """
 import numpy as np
-
+from math import cos, radians
 from src.data_model import Camera
 
 def compute_focal_length_in_mm(camera: Camera) -> np.ndarray:
@@ -73,7 +73,19 @@ def compute_image_footprint_on_surface(camera: Camera, distance_from_surface: fl
 
     return np.array([width, height], dtype=np.float32)
 
-
+def compute_image_footprint_on_surface_with_angle(camera, height, camera_angle_deg=0) -> np.ndarray:
+    # Convert angle to radians for computation
+    camera_angle_rad = radians(camera_angle_deg)
+    
+    # Footprint size computation without tilt (nadir)
+    footprint_width = (camera.sensor_size_x_mm * height) / (camera.fx * 1e-3)  # Convert mm to meters
+    footprint_height = (camera.sensor_size_y_mm * height) / (camera.fy * 1e-3)  # Convert mm to meters
+    
+    # Adjust the footprint size based on the tilt angle
+    footprint_width /= cos(camera_angle_rad)
+    footprint_height /= cos(camera_angle_rad)
+    
+    return footprint_width, footprint_height
 
 def compute_ground_sampling_distance(camera: Camera, distance_from_surface: float) -> float:
     """Compute the ground sampling distance (GSD) at a given distance from the surface.

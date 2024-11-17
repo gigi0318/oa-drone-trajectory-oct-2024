@@ -65,7 +65,16 @@ def compute_speed_during_photo_capture(camera: Camera, dataset_spec: DatasetSpec
     Returns:
         float: The speed at which the drone should move during photo capture.
     """
-    raise NotImplementedError()
+    # Compute Ground Sampling Distance (GSD)
+    gsd = compute_ground_sampling_distance(camera, dataset_spec.height)
+    
+    # Convert exposure time from milliseconds to seconds
+    exposure_time_seconds = dataset_spec.exposure_time_ms / 1000.0
+    
+    # Compute the maximum allowable speed to avoid motion blur
+    max_speed = gsd / exposure_time_seconds
+    
+    return max_speed
 
 
 def generate_photo_plan_on_grid(camera: Camera, dataset_spec: DatasetSpec) -> T.List[Waypoint]:

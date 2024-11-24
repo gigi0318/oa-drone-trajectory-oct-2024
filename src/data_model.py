@@ -1,6 +1,6 @@
 """Data models for the camera and user specification."""
 from dataclasses import dataclass
-
+from typing import Optional, Tuple
 @dataclass
 class Camera:
     """
@@ -47,4 +47,10 @@ class Waypoint:
     """
     Waypoints are positions where the drone should fly to and capture a photo.
     """
-    pass
+    x: float  # x position in meters
+    y: float  # y position in meters
+    z: float  # z position (altitude) in meters
+    camera_angle: Optional[float] = 0.0  # camera angle relative to the nadir, in degrees (default: 0 for nadir)
+    look_at: Optional[Tuple[float, float, float]] = None  # the point the camera is looking at (x, y, z)
+    speed: float = 0.0  # speed at this waypoint (in meters per second)
+    timestamp: Optional[float] = None  # time of the image capture (in seconds, optional)

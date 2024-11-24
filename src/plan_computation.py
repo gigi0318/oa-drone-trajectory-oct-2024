@@ -88,4 +88,46 @@ def generate_photo_plan_on_grid(camera: Camera, dataset_spec: DatasetSpec) -> T.
         List[Waypoint]: scan plan as a list of waypoints.
 
     """
-    raise NotImplementedError()
+    waypoints = []
+
+    # Step 1: Compute horizontal and vertical distances between images
+    distance_horizontal, distance_vertical = compute_distance_between_images(camera, dataset_spec)
+
+    # Step 2: Compute the number of images required to cover the scan area horizontally and vertically
+    num_images_x = math.ceil(dataset_spec.scan_dimension_x / distance_horizontal)
+    num_images_y = math.ceil(dataset_spec.scan_dimension_y / distance_vertical)
+
+    # Step 3: Create waypoints for the photo grid
+    # The grid will be arranged in a "snake-like" pattern to alternate between rows.
+    for i in range(num_images_y):
+        for j in range(num_images_x):
+            # Determine the x, y, z position of the waypoint
+            x_position = j * distance_horizontal
+            y_position = i * distance_vertical
+            z_position = dataset_spec.height  # Assume the height is constant for all waypoints
+
+            # For general case (non-nadir), adjust the camera angle and look_at point
+            if dataset_spec.camera_angle != 0:
+                # Here, you would compute the look_at point based on the camera angle
+                # (This is a simplified version; full implementation would need trigonometry).
+                look_at_point = (x_position, y_position, z_position - 100)  # Simplified for now
+            else:
+                look_at_point = None  # Nadirs just look down
+
+            # Compute the speed for the current waypoint
+            speed = compute_speed_during_photo_capture(camera, dataset_spec)
+
+            # Create the waypoint object
+            waypoint = Waypoint(
+                x=x_position,
+                y=y_position,
+                z=z_position,
+                camera_angle=dataset_spec.camera_angle,
+                look_at=look_at_point,
+                speed=speed
+            )
+
+            # Add the waypoint to the list
+            waypoints.append(waypoint)
+
+    return waypoints

@@ -83,7 +83,6 @@ def compute_image_footprint_on_surface_with_angle(camera, height, camera_angle_d
     
     # Adjust the footprint size based on the tilt angle
     footprint_width /= cos(camera_angle_rad)
-    footprint_height /= cos(camera_angle_rad)
     
     return footprint_width, footprint_height
 
@@ -106,8 +105,7 @@ def compute_ground_sampling_distance(camera: Camera, distance_from_surface: floa
     gsd_y = footprint[1] / camera.image_size_y  # height GSD
     
     # You can choose to return either or average
-    return (gsd_x + gsd_y) / 2
-~1
+    return min(gsd_x,gsd_y)
 
 
 def reproject_image_point_to_world(camera: Camera, pixel: np.ndarray, Z: float) -> np.ndarray:
@@ -131,4 +129,3 @@ def reproject_image_point_to_world(camera: Camera, pixel: np.ndarray, Z: float) 
     X = (u - camera.cx) * Z / camera.fx
     Y = (v - camera.cy) * Z / camera.fy
     return np.array([X, Y, Z], dtype=np.float32)
-

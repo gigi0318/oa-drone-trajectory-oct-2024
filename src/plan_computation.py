@@ -102,7 +102,10 @@ def generate_photo_plan_on_grid(camera: Camera, dataset_spec: DatasetSpec) -> T.
     for i in range(num_images_y):
         for j in range(num_images_x):
             # Determine the x, y, z position of the waypoint
-            x_position = j * distance_horizontal
+            if(i%2==1):
+                x_position = (num_images_x-j-1) * distance_horizontal #For backward transversal
+            else:
+                x_position = j*distance_horizontal #For forward transversal
             y_position = i * distance_vertical
             z_position = dataset_spec.height  # Assume the height is constant for all waypoints
 
@@ -112,7 +115,7 @@ def generate_photo_plan_on_grid(camera: Camera, dataset_spec: DatasetSpec) -> T.
                 # (This is a simplified version; full implementation would need trigonometry).
                 look_at_point = (x_position, y_position, z_position - 100)  # Simplified for now
             else:
-                look_at_point = None  # Nadirs just look down
+                look_at_point = (x_position, y_position, 0)
 
             # Compute the speed for the current waypoint
             speed = compute_speed_during_photo_capture(camera, dataset_spec)

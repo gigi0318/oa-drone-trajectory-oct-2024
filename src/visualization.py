@@ -35,5 +35,5 @@ def plot_photo_plan(photo_plans: T.List[Waypoint]) -> go.Figure:
                 )
             ),
     )
-
+    fig.show()
     return fig
